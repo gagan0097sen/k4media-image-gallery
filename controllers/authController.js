@@ -20,12 +20,19 @@ const adminLogin = async (req, res) => {
       expiresIn: '7d',
     });
 
-    res.cookie('adminToken', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    // res.cookie('adminToken', token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'lax',
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // });
+
+     res.cookie('adminToken', token, {
+  httpOnly: true,
+  secure: true,          // 🔥 MUST in production (HTTPS)
+  sameSite: 'none',      // 🔥 MUST for cross-site (Render ↔ Vercel)
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
 
     sendSuccess(res, 200, {
       admin: {
@@ -91,3 +98,4 @@ module.exports = {
     sendSuccess(res, 200, null, 'Logout successful');
   },
 };
+
